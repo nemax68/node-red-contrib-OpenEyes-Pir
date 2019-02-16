@@ -1,6 +1,6 @@
 {
     "name"         : "openeyes-pir",
-    "version"      : "0.0.1",
+    "version"      : "0.0.2",
     "description"  : "This reads /dev/input/event0 (or other input device) on OPEN-EYES PIR",
     "dependencies": {
     },
@@ -17,6 +17,6 @@
     },
     "author": {
         "name": "Massimiliano Negretti",
-        "email": "massimiliano.negretti@open-eyes.com"
+        "email": "massimiliano.negretti@open-eyes.it"
     }
 }

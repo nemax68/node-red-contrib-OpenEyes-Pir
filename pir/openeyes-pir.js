@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Massimiliano Negretti
+ * Copyright 2018 OPEN-EYES S.r.l.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,51 +33,38 @@ module.exports = function(RED) {
 
 		// Store local copies of the node configuration (as defined in the .html)
 		var msg = { topic: "pir" };
-		this.device = "/dev/input/event0";
+		this.device = "/dev/input/event1";
 		this.evtype = 5;
 		this.evcode = 11;
 		var node = this;
 
 		var FS = require("fs");
-		var closeFS = 0;
 
-		if (!FS.existsSync(node.device)) {
-			throw "Info : Pir Sensor node can't find device." + node.device;
-		}
+    node.status({fill: "green", shape: "dot", text: 'link'});
 
-		// This is the stuff that's actually happening in the node
-		FS.open(node.device, "r", function (err, fd) {
-			if (err) throw err;
+    var options = { flags: 'r',encoding: null,fd: null,autoClose: true };
+    // This line opens the file as a readable stream
+    var readStream = FS.createReadStream(this.device,options);
 
-			var buffer = new Buffer.alloc(16);
+    readStream.on('data', function(buf){
+      var readElement = parse(buf);
 
-			function startRead() {
-				FS.read(fd, buffer, 0, 16, null, function (err, bytesRead) {
-					var readElement = parse(buffer);
+		  if (readElement != undefined ){
+		    if(readElement.type==node.evtype && readElement.code==node.evcode){
+			    var mystring = "Event" + readElement.val;
+				  msg.payload=mystring;
+				  node.send(msg);
+		    }
+		  }
+    });
 
-					if (readElement != undefined ){
-						if(readElement.type==node.evtype && readElement.code==node.evcode){
-							var mystring = "Event" + readElement.val;
-							msg.payload=mystring;
-							node.send(msg);
-						}
-					}
+    readStream.on('error', function(e){
+      node.status({fill: "red", shape: "dot", text: 'no device'});
+      console.error(e);
+    });
 
-					if (closeFS == 1) {
-						FS.close(fd)
-					} else {
-						startRead();
-					}
-
-			    	 });
-			}
-
-			startRead();
-
-		});
-
-		this.on('close', function() {
-			closeFS = 1;
+    this.on('close', function(readstream) {
+      readstream.destroy();
 		});
 
 	}
