@@ -16,7 +16,7 @@ Requirements
 
 * Need [OpenEyes](http://open-eyes.it) hardware platform
 
-  ![OpenEyes-SetButton-flow](https://github.com/nemax68/node-red-contrib-OpenEyes-Pir/tree/master/images/open-eyes.png)
+  ![OpenEyes-image](https://github.com/nemax68/node-red-contrib-OpenEyes-Pir/blob/master/images/open-eyes.png)
 
 Install
 =======
