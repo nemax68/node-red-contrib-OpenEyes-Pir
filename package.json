@@ -1,16 +1,20 @@
 {
-    "name"         : "openeyes-pir",
-    "version"      : "0.0.2",
-    "description"  : "This reads /dev/input/event0 (or other input device) on OPEN-EYES PIR",
-    "dependencies": {
-    },
-    "repository" : {
-      "type": "git",
-      "url": "https://github.com/nemax68/node-red-contrib-OpenEyes-Pir"
+    "name": "openeyes-pir",
+    "version": "0.0.2",
+    "description": "This reads /dev/input/event0 (or other input device) on OPEN-EYES PIR",
+    "dependencies": {},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nemax68/node-red-contrib-OpenEyes-Pir"
     },
     "license": "GPL-3.0-or-later",
-    "keywords": [ "node-red", "OPEN-EYES", "pir", "PIR" ],
-    "node-red"     : {
+    "keywords": [
+        "node-red",
+        "OPEN-EYES",
+        "pir",
+        "PIR"
+    ],
+    "node-red": {
         "nodes": {
             "pir": "pir/openeyes-pir.js"
         }
