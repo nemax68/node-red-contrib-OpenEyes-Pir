@@ -40,31 +40,32 @@ module.exports = function(RED) {
 
 		var FS = require("fs");
 
-    node.status({fill: "green", shape: "dot", text: 'link'});
+        node.status({fill: "green", shape: "dot", text: 'link'});
 
-    var options = { flags: 'r',encoding: null,fd: null,autoClose: true };
-    // This line opens the file as a readable stream
-    var readStream = FS.createReadStream(this.device,options);
+        var options = { flags: 'r',encoding: null,fd: null,autoClose: true };
 
-    readStream.on('data', function(buf){
-      var readElement = parse(buf);
+        // This line opens the file as a readable stream
+        var readStream = FS.createReadStream(this.device,options);
 
-		  if (readElement != undefined ){
-		    if(readElement.type==node.evtype && readElement.code==node.evcode){
-			    var mystring = "Event" + readElement.val;
-				  msg.payload=mystring;
-				  node.send(msg);
-		    }
-		  }
-    });
+        readStream.on('data', function(buf){
+            var readElement = parse(buf);
 
-    readStream.on('error', function(e){
-      node.status({fill: "red", shape: "dot", text: 'no device'});
-      console.error(e);
-    });
+            if (readElement != undefined ){
+                if(readElement.type==node.evtype && readElement.code==node.evcode){
+                    var mystring = "Event" + readElement.val;
+                    msg.payload=mystring;
+                    node.send(msg);
+                }
+            }
+        });
 
-    this.on('close', function(readstream) {
-      readstream.destroy();
+        readStream.on('error', function(e){
+            node.status({fill: "red", shape: "dot", text: 'no device'});
+            console.error(e);
+        });
+
+        this.on('close', function(readstream) {
+            readstream.destroy();
 		});
 
 	}
