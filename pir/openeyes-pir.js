@@ -32,7 +32,6 @@ module.exports = function(RED) {
 		RED.nodes.createNode(this,n);
 
 		// Store local copies of the node configuration (as defined in the .html)
-		var msg = { topic: "pir" };
 		this.device = "/dev/input/event1";
 		this.evtype = 5;
 		this.evcode = 11;
@@ -52,9 +51,21 @@ module.exports = function(RED) {
 
             if (readElement != undefined ){
                 if(readElement.type==node.evtype && readElement.code==node.evcode){
-                    var mystring = "Event" + readElement.val;
-                    msg.payload=mystring;
-                    node.send(msg);
+                    var event_str;
+
+                    if(readElement.val)
+                        event_str = "on";
+                    else
+                        event_str = "off";
+
+                    var msg = {
+                        type: "sensor",
+                        topic: "pir",
+                        presence: event_str
+                    };
+
+                    node.send({payload: msg});
+
                 }
             }
         });
