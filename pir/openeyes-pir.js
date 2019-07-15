@@ -47,25 +47,26 @@ module.exports = function(RED) {
         var readStream = FS.createReadStream(this.device,options);
 
         readStream.on('data', function(buf){
-            var readElement = parse(buf);
+            if (buf.length>=16) {
+                var readElement = parse(buf);
 
-            if (readElement != undefined ){
-                if(readElement.type==node.evtype && readElement.code==node.evcode){
-                    var event_str;
+                if (readElement != undefined ) {
+                    if(readElement.type==node.evtype && readElement.code==node.evcode){
+                        var event_str;
 
-                    if(readElement.val)
-                        event_str = "on";
-                    else
-                        event_str = "off";
+                        if(readElement.val)
+                            event_str = "on";
+                        else
+                            event_str = "off";
 
-                    var msg = {
-                        type: "sensor",
-                        topic: "pir",
-                        presence: event_str
-                    };
+                        var msg = {
+                            type: "sensor",
+                            topic: "pir",
+                            presence: event_str
+                        };
 
-                    node.send({payload: msg});
-
+                        node.send({payload: msg});
+                    }
                 }
             }
         });
@@ -75,8 +76,8 @@ module.exports = function(RED) {
             console.error(e);
         });
 
-        this.on('close', function(readstream) {
-            readstream.destroy();
+        this.on('close', function() {
+            FS.close();
 		});
 
 	}
